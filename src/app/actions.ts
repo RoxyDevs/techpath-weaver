@@ -1,6 +1,7 @@
 "use server";
 
 import { generateInitialCareerPaths } from "@/ai/flows/generate-initial-career-paths";
+import { getDailyTechEvent as getDailyTechEventFlow } from "@/ai/flows/get-daily-tech-event";
 import { z } from "zod";
 
 const interestsSchema = z.object({
@@ -50,4 +51,14 @@ export async function getCareerPaths(
       paths: [],
     };
   }
+}
+
+export async function getDailyTechEvent(): Promise<string> {
+    try {
+        const result = await getDailyTechEventFlow();
+        return result.event;
+    } catch (error) {
+        console.error("Error fetching daily tech event:", error);
+        return "Could not fetch today's tech trivia. Please check back tomorrow!";
+    }
 }

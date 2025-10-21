@@ -12,6 +12,7 @@ import { CareerCard } from "./career-card";
 import { Recommendations } from "./recommendations";
 import { Mentors } from "./mentors";
 import { Progress } from "./progress";
+import { TechTrivia } from "./tech-trivia";
 
 const initialState: FormState = {
   message: "",
@@ -53,25 +54,30 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <Card className="shadow-lg border-primary/20">
-        <CardHeader>
-          <CardTitle className="font-headline text-3xl">Let's Weave Your Future</CardTitle>
-          <CardDescription className="font-body text-base">
-            Tell us about your passions, skills, and what you love to do. Our AI will craft personalized career paths just for you.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={formAction} className="space-y-4">
-            <Textarea
-              name="interests"
-              placeholder="e.g., 'I love creating beautiful user interfaces, solving complex problems with code, and I'm passionate about data visualization and machine learning.'"
-              rows={4}
-              className="font-body text-base"
-            />
-            <SubmitButton />
-          </form>
-        </CardContent>
-      </Card>
+      <div className="grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <Card className="shadow-lg border-primary/20 h-full">
+              <CardHeader>
+                <CardTitle className="font-headline text-3xl">Let's Weave Your Future</CardTitle>
+                <CardDescription className="font-body text-base">
+                  Tell us about your passions, skills, and what you love to do. Our AI will craft personalized career paths just for you.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form action={formAction} className="space-y-4">
+                  <Textarea
+                    name="interests"
+                    placeholder="e.g., 'I love creating beautiful user interfaces, solving complex problems with code, and I'm passionate about data visualization and machine learning.'"
+                    rows={4}
+                    className="font-body text-base"
+                  />
+                  <SubmitButton />
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+          <TechTrivia />
+      </div>
       
       {state.paths.length > 0 ? (
         <div className="space-y-8">
