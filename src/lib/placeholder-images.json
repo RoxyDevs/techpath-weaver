@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "mentor1",
+      "description": "Photo of a smiling woman in a professional setting",
+      "imageUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB3b21hbnxlbnwwfHx8fDE3NjEwMDY4NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "professional woman"
+    },
+    {
+      "id": "mentor2",
+      "description": "Photo of a woman with a friendly expression, possibly a mentor",
+      "imageUrl": "https://picsum.photos/seed/mentor2/200/200",
+      "imageHint": "friendly mentor"
+    },
+    {
+      "id": "mentor3",
+      "description": "A portrait of a tech professional",
+      "imageUrl": "https://images.unsplash.com/photo-1573495804669-ec82ad00f327?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx0ZWNoJTIwcHJvZmVzc2lvbmFsfGVufDB8fHx8MTc2MTA1OTM1MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tech professional"
+    },
+    {
+      "id": "mentor4",
+      "description": "A woman working on a laptop, looking approachable",
+      "imageUrl": "https://images.unsplash.com/photo-1524508762098-fd966ffb6ef9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d29tYW4lMjBsYXB0b3B8ZW58MHx8fHwxNzYxMDM5NzQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman laptop"
+    }
+  ]
 }
