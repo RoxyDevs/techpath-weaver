@@ -1,133 +1,98 @@
 /**
- * @fileoverview Firestore Security Rules for Tech Path Weaver.
+ * @fileOverview Firestore Security Rules for Tech Path Weaver Application
  *
- * Core Philosophy: This ruleset enforces a strict user-ownership model for user profiles
- * and allows public read access to career paths and courses. Mentorships are accessible
- * only to the involved mentor and mentee. Authorization independence is maintained
- * by storing the `authId` inside the `UserProfile` document.
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for user profiles,
+ * allowing users to only access and modify their own profile data.
+ * Career paths, courses, and mentorships are publicly readable but
+ * only modifiable by authorized users (currently no authorization implemented).
  *
  * Data Structure:
- * - User profiles are stored under `/users/{userId}`, where `userId` matches the
+ * - /users/{userId}: Stores individual user profiles, where {userId} is the
  *   Firebase Authentication UID.
- * - Career paths are stored under `/careerPaths/{careerPathId}` and are publicly readable.
- * - Courses are stored under `/courses/{courseId}` and are publicly readable.
- * - Mentorships are stored under `/mentorships/{mentorshipId}` and are accessible only to
- *   the involved mentor and mentee.
+ * - /careerPaths/{careerPathId}: Stores information about career paths.
+ * - /courses/{courseId}: Stores information about courses.
+ * - /mentorships/{mentorshipId}: Stores information about mentorship connections.
  *
  * Key Security Decisions:
- * - User listing is disallowed to protect user privacy.
- * - Career paths and courses are publicly readable to encourage exploration.
- * - Mentorship details are private and only accessible to the participants.
+ * - User profiles are private and only accessible to the owning user.
+ * - Career paths and courses are publicly readable.
+ * - User listing is disabled to prevent enumeration of user accounts.
+ * - Write access to careerPaths, courses, and mentorships is currently open
+ *   but must be secured in future iterations.
  *
- * Denormalization for Authorization: The UserProfile stores the 'authId' to
- * allow server-side access to the user's authentication information without requiring
- * a separate lookup. This is crucial for write operations where checking the
- * authenticated user's ID against the profile's `authId` ensures that only the
- * authenticated user can modify their profile.
+ * Denormalization for Authorization:
+ * The `authId` is stored within the UserProfile document to eliminate the need
+ * for security rules to fetch authentication information during write operations.
+ *
+ * Structural Segregation:
+ * User profile data is segregated under the `/users/{userId}` collection,
+ * ensuring that only the authenticated user can access their own profile data.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Enforces user-ownership for user profiles. Only the authenticated user
-     *              can read, create, update, or delete their own profile.
+     * @description Secure user profiles, allowing only the owning user access.
      * @path /users/{userId}
-     * @allow (create) User with auth UID 'user_abc' can create their own profile at /users/user_abc with matching authId.
-     * @deny  (create) User with auth UID 'user_xyz' cannot create a profile at /users/user_abc.
-     * @allow (get, update, delete) User with auth UID 'user_abc' can read, update, or delete their own profile at /users/user_abc.
-     * @deny  (get, update, delete) User with auth UID 'user_xyz' cannot read, update, or delete the profile at /users/user_abc.
-     * @principle Enforces document ownership for all operations on user profiles.
+     * @allow (create) User with UID 'user_abc' can create their profile if request.auth.uid == 'user_abc' and request.resource.data.id == 'user_abc'.
+     * @allow (get, update, delete) User with UID 'user_abc' can access their profile if request.auth.uid == 'user_abc'.
+     * @deny (create) User with UID 'user_xyz' cannot create a profile with ID 'user_abc'.
+     * @deny (get, update, delete) User with UID 'user_xyz' cannot access user 'user_abc' profile.
+     * @principle Enforces document ownership for reads and writes. Validates the user ID on create.
      */
     match /users/{userId} {
+      function isOwner(userId) {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
       allow get: if isOwner(userId);
-      allow list: if false; // User listing is not allowed.
-      allow create: if isSignedIn() && request.auth.uid == userId && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow list: if false; // Prevent listing all users
+
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id; //Immutable id
       allow delete: if isExistingOwner(userId);
     }
 
     /**
-     * @description Allows public read access to career paths, but restricts creation,
-     *              updates, and deletion.
+     * @description Career paths are publicly readable, writes are not secured in this prototype.
      * @path /careerPaths/{careerPathId}
-     * @allow (get, list) Any user (authenticated or not) can read career path information.
-     * @deny  (create, update, delete) No user can create, update, or delete career path information.
-     * @principle Allows public read access while restricting write access.
+     * @allow (get, list) Any user can read career path information.
+     * @deny (create, update, delete) No one can currently write to career paths.
+     * @principle Public read, owner-only writes (currently writes are disallowed).
      */
     match /careerPaths/{careerPathId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create, update, delete: if false; // TODO: Add authorization for career path creation/modification
     }
 
     /**
-     * @description Allows public read access to courses, but restricts creation,
-     *              updates, and deletion.
+     * @description Courses are publicly readable, writes are not secured in this prototype.
      * @path /courses/{courseId}
-     * @allow (get, list) Any user (authenticated or not) can read course information.
-     * @deny  (create, update, delete) No user can create, update, or delete course information.
-     * @principle Allows public read access while restricting write access.
+     * @allow (get, list) Any user can read course information.
+     * @deny (create, update, delete) No one can currently write to courses.
+     * @principle Public read, owner-only writes (currently writes are disallowed).
      */
     match /courses/{courseId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create, update, delete: if false; // TODO: Add authorization for course creation/modification
     }
 
     /**
-     * @description Enforces access control for mentorship documents, allowing only the mentor or mentee to read, update or delete.
+     * @description Mentorships are publicly readable, writes are not secured in this prototype.
      * @path /mentorships/{mentorshipId}
-     * @allow (get) User with auth UID 'mentor_abc' can read the mentorship if they are the mentor.
-     * @allow (get) User with auth UID 'mentee_xyz' can read the mentorship if they are the mentee.
-     * @deny (get) User with auth UID 'outsider' cannot read the mentorship if they are not a participant.
-     * @allow (create) User with auth UID 'user_abc' can create the mentorship if the request data indicates that it is valid.
-     * @allow (update, delete) User with auth UID 'mentor_abc' or 'mentee_xyz' can update or delete the mentorship.
-     * @principle Restricts access to mentorship details to the involved participants.
+     * @allow (get, list) Any user can read mentorship information.
+     * @deny (create, update, delete) No one can currently write to mentorships.
+     * @principle Public read, owner-only writes (currently writes are disallowed).
      */
     match /mentorships/{mentorshipId} {
-      allow get: if isMentorOrMentee(resource.data.mentorId, resource.data.menteeId);
-      allow list: if false;
-      allow create: if isSignedIn() && (request.resource.data.mentorId == request.auth.uid || request.resource.data.menteeId == request.auth.uid);
-      allow update: if isMentorOrMentee(resource.data.mentorId, resource.data.menteeId) && resource != null;
-      allow delete: if isMentorOrMentee(resource.data.mentorId, resource.data.menteeId) && resource != null;
-    }
-
-    // --- Helper Functions ---
-
-    /**
-     * @description Checks if the user is signed in.
-     * @return {bool} True if the user is signed in, false otherwise.
-     */
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    /**
-     * @description Checks if the authenticated user is the owner of the document based on the userId.
-     * @param {string} userId - The user ID from the document path.
-     * @return {bool} True if the user is the owner, false otherwise.
-     * @example isOwner('user123') returns true if request.auth.uid == 'user123'.
-     */
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
-        /**
-     * @description Checks if the authenticated user is the owner of an existing document.
-     * @param {string} userId - The user ID from the document path.
-     * @return {bool} True if the user is the owner and the document exists, false otherwise.
-     */
-    function isExistingOwner(userId) {
-      return isOwner(userId) && resource != null;
-    }
-
-    /**
-     * @description Checks if the authenticated user is either the mentor or the mentee.
-     * @param {string} mentorId - The mentor's user ID.
-     * @param {string} menteeId - The mentee's user ID.
-     * @return {bool} True if the user is either the mentor or the mentee, false otherwise.
-     */
-    function isMentorOrMentee(mentorId, menteeId) {
-      return isSignedIn() && (request.auth.uid == mentorId || request.auth.uid == menteeId);
+      allow get, list: if true;
+      allow create, update, delete: if false; // TODO: Add authorization for mentorship creation/modification
     }
   }
 }

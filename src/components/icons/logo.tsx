@@ -7,18 +7,18 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 100 20"
       width="100"
       height="20"
-      aria-label="Tech Path Weaver Logo"
+      aria-label="TechPath Weaver Logo"
       {...props}
     >
       <style>
         {`
           .logo-text {
-            font-family: 'Belleza', sans-serif;
+            font-family: 'Visage', sans-serif;
             font-size: 18px;
             fill: hsl(var(--foreground));
           }
           .logo-highlight {
-            fill: hsl(var(--primary));
+            fill: hsl(var(--accent));
           }
         `}
       </style>

@@ -4,28 +4,29 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "UserProfile",
       "type": "object",
-      "description": "Represents a user's profile in the Tech Path Weaver application.",
+      "description": "Represents a user's profile in the TechPath Weaver application.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the UserProfile entity."
-        },
         "authId": {
           "type": "string",
           "description": "Identifier from the external authentication provider (e.g., Google, Telegram)."
         },
-        "firstName": {
+        "name": {
           "type": "string",
-          "description": "User's first name."
-        },
-        "lastName": {
-          "type": "string",
-          "description": "User's last name."
+          "description": "User's full name."
         },
         "email": {
           "type": "string",
           "description": "User's email address.",
           "format": "email"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "URL of the user's profile picture."
+        },
+        "role": {
+          "type": "string",
+          "description": "User's role.",
+          "enum": ["usuaria", "mentora", "admin"]
         },
         "skills": {
           "type": "array",
@@ -45,27 +46,16 @@
             "type": "string"
           }
         },
-        "careerPathIds": {
-          "type": "array",
-          "description": "References to CareerPaths recommended to the user. (Relationship: UserProfile 1:N CareerPath)",
-          "items": {
-            "type": "string"
-          }
-        },
-        "mentorshipId": {
+        "goals": {
           "type": "string",
-          "description": "Reference to Mentorship. (Relationship: UserProfile 1:1 Mentorship)"
+          "description": "User's career goals."
         }
       },
       "required": [
-        "id",
         "authId",
-        "firstName",
-        "lastName",
+        "name",
         "email",
-        "skills",
-        "experience",
-        "interests"
+        "role"
       ]
     },
     "CareerPath": {
@@ -74,10 +64,6 @@
       "type": "object",
       "description": "Represents a recommended career path for a user.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the CareerPath entity."
-        },
         "name": {
           "type": "string",
           "description": "Name of the career path (e.g., Data Scientist, Web Developer)."
@@ -99,17 +85,9 @@
           "items": {
             "type": "string"
           }
-        },
-        "userProfileIds": {
-          "type": "array",
-          "description": "References to UserProfiles. (Relationship: CareerPath 1:N UserProfile)",
-          "items": {
-            "type": "string"
-          }
         }
       },
       "required": [
-        "id",
         "name",
         "description",
         "requiredSkills",
@@ -122,10 +100,6 @@
       "type": "object",
       "description": "Represents a course recommended for skill development.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Course entity."
-        },
         "title": {
           "type": "string",
           "description": "Title of the course."
@@ -142,17 +116,9 @@
           "type": "string",
           "description": "URL of the course.",
           "format": "uri"
-        },
-        "careerPathIds": {
-          "type": "array",
-          "description": "References to CareerPaths. (Relationship: Course N:N CareerPath)",
-          "items": {
-            "type": "string"
-          }
         }
       },
       "required": [
-        "id",
         "title",
         "description",
         "provider",
@@ -165,17 +131,13 @@
       "type": "object",
       "description": "Represents a mentorship connection between a user and a mentor.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Mentorship entity."
-        },
         "mentorId": {
           "type": "string",
-          "description": "Reference to the mentor's UserProfile. (Relationship: UserProfile 1:1 Mentorship)"
+          "description": "Reference to the mentor's UserProfile."
         },
         "menteeId": {
           "type": "string",
-          "description": "Reference to the mentee's UserProfile. (Relationship: UserProfile 1:1 Mentorship)"
+          "description": "Reference to the mentee's UserProfile."
         },
         "startDate": {
           "type": "string",
@@ -190,90 +152,80 @@
         "goals": {
           "type": "string",
           "description": "Description of the goals of the mentorship."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["requested", "active", "completed", "cancelled"]
         }
       },
       "required": [
-        "id",
         "mentorId",
         "menteeId",
         "startDate",
-        "goals"
+        "goals",
+        "status"
       ]
+    },
+     "UserSession": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserSession",
+      "type": "object",
+      "description": "Represents a user's interaction session with the bot or app.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user."
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["web", "telegram"]
+        },
+        "interactions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["userId", "startTime", "platform"]
     }
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous"
+      "google.com"
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/users/{userId}",
-        "definition": {
-          "entityName": "UserProfile",
-          "schema": {
-            "$ref": "#/backend/entities/UserProfile"
-          },
-          "description": "Stores user profiles.  Includes 'authId' for authorization independence.  'userId' corresponds to the Firebase Authentication UID.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The Firebase Authentication UID of the user."
-            }
-          ]
-        }
+    "rules": "firestore.rules",
+    "structure": {
+      "users": {
+        "schema": "UserProfile",
+        "description": "Stores user profile data. The document ID is the user's Firebase Auth UID."
       },
-      {
-        "path": "/careerPaths/{careerPathId}",
-        "definition": {
-          "entityName": "CareerPath",
-          "schema": {
-            "$ref": "#/backend/entities/CareerPath"
-          },
-          "description": "Stores career path information.",
-          "params": [
-            {
-              "name": "careerPathId",
-              "description": "Unique identifier for the career path."
-            }
-          ]
-        }
+      "mentors": {
+          "schema": "UserProfile",
+          "description": "Public profiles for mentors. Subset of UserProfile, contains specialty, availability etc."
       },
-      {
-        "path": "/courses/{courseId}",
-        "definition": {
-          "entityName": "Course",
-          "schema": {
-            "$ref": "#/backend/entities/Course"
-          },
-          "description": "Stores course information.",
-          "params": [
-            {
-              "name": "courseId",
-              "description": "Unique identifier for the course."
-            }
-          ]
-        }
+      "career_paths": {
+        "schema": "CareerPath",
+        "description": "Stores suggested career paths based on market analysis."
       },
-      {
-        "path": "/mentorships/{mentorshipId}",
-        "definition": {
-          "entityName": "Mentorship",
-          "schema": {
-            "$ref": "#/backend/entities/Mentorship"
-          },
-          "description": "Stores mentorship connection information.",
-          "params": [
-            {
-              "name": "mentorshipId",
-              "description": "Unique identifier for the mentorship."
-            }
-          ]
-        }
+      "sessions": {
+        "schema": "UserSession",
+        "description": "Collection to store user interaction history."
+      },
+      "mentorships": {
+        "schema": "Mentorship",
+        "description": "Stores mentorship connection information."
       }
-    ],
-    "reasoning": "This Firestore data structure is designed for the Tech Path Weaver application, focusing on career path recommendations for women in technology. It emphasizes authorization independence, clarity, and scalability.  User profiles and associated data are organized under the `/users/{userId}` path to ensure clear ownership and simplified security rules.\n\nAuthorization Independence is achieved by storing the `authId` within the UserProfile document. This eliminates the need for security rules to fetch authentication information during write operations.\n\nTo support secure `list` operations (QAPs), we utilize structural segregation and path-based ownership. Each collection is designed with a homogenous security posture.  For example, user profile data is segregated under the `/users/{userId}` collection, ensuring that only the authenticated user can access their own profile data.\n\nThe structure supports invariants by enforcing ownership via the path structure and utilizing server timestamps for creation and modification dates (though timestamps aren't explicitly in the schema, the structure is built to accommodate them). This structure facilitates simple, robust, and easily debuggable security rules."
+    }
   }
 }
