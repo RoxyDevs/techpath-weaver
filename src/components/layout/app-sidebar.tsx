@@ -23,6 +23,7 @@ import { usePathname } from "next/navigation";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAuth, useUser } from "@/firebase";
+import { VerifiedBadge } from "../icons/verified-badge";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -33,6 +34,8 @@ export function AppSidebar() {
   const handleSignOut = async () => {
     await auth.signOut();
   };
+
+  const isCreator = user?.email === 'roxdev2023@gmail.com';
 
   return (
     <Sidebar>
@@ -97,7 +100,10 @@ export function AppSidebar() {
                 <AvatarFallback>{user.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                <p className="text-sm font-medium text-foreground">{user.displayName}</p>
+                <div className="flex items-center gap-1">
+                  <p className="text-sm font-medium text-foreground">{user.displayName}</p>
+                  {isCreator && <VerifiedBadge className="h-4 w-4" />}
+                </div>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
               </div>
             </div>
