@@ -1,98 +1,144 @@
 /**
- * @fileOverview Firestore Security Rules for Tech Path Weaver Application
- *
- * Core Philosophy:
- * This ruleset enforces a strict user-ownership model for user profiles,
- * allowing users to only access and modify their own profile data.
- * Career paths, courses, and mentorships are publicly readable but
- * only modifiable by authorized users (currently no authorization implemented).
- *
- * Data Structure:
- * - /users/{userId}: Stores individual user profiles, where {userId} is the
- *   Firebase Authentication UID.
- * - /careerPaths/{careerPathId}: Stores information about career paths.
- * - /courses/{courseId}: Stores information about courses.
- * - /mentorships/{mentorshipId}: Stores information about mentorship connections.
- *
- * Key Security Decisions:
- * - User profiles are private and only accessible to the owning user.
- * - Career paths and courses are publicly readable.
- * - User listing is disabled to prevent enumeration of user accounts.
- * - Write access to careerPaths, courses, and mentorships is currently open
- *   but must be secured in future iterations.
- *
- * Denormalization for Authorization:
- * The `authId` is stored within the UserProfile document to eliminate the need
- * for security rules to fetch authentication information during write operations.
- *
- * Structural Segregation:
- * User profile data is segregated under the `/users/{userId}` collection,
- * ensuring that only the authenticated user can access their own profile data.
+ * @description This ruleset enforces a user-ownership model for user profiles, restricting access to a user's own profile data.
+ *  It provides public read access to the mentors and career_paths collections.
+ * @dataStructure
+ *  - /users/{userId}: Stores individual user profiles, with the document ID matching the Firebase Auth UID.
+ *  - /mentors/{mentorId}: Stores a subset of user profiles designated as mentors, publicly readable.
+ *  - /career_paths/{careerPathId}: Stores data on suggested career paths, publicly readable.
+ *  - /sessions/{sessionId}: Stores user interaction history, restricted to the user.
+ *  - /mentorships/{mentorshipId}: Stores mentorship connection information.
+ * @keySecurityDecisions
+ *  - Users can only read and write their own profile data in the /users collection.
+ *  - The /mentors and /career_paths collections are publicly readable but only writeable by authorized users (not implemented in this prototype).
+ *  - Listing of users is not permitted.
+ *  - The role field is not validated, allowing for flexible role management during prototyping.
+ * @denormalizationForAuthorization N/A
+ * @structuralSegregation N/A
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Secure user profiles, allowing only the owning user access.
-     * @path /users/{userId}
-     * @allow (create) User with UID 'user_abc' can create their profile if request.auth.uid == 'user_abc' and request.resource.data.id == 'user_abc'.
-     * @allow (get, update, delete) User with UID 'user_abc' can access their profile if request.auth.uid == 'user_abc'.
-     * @deny (create) User with UID 'user_xyz' cannot create a profile with ID 'user_abc'.
-     * @deny (get, update, delete) User with UID 'user_xyz' cannot access user 'user_abc' profile.
-     * @principle Enforces document ownership for reads and writes. Validates the user ID on create.
+     * @description Allows users to read and write their own profile data.
+     * @path /databases/{database}/documents/users/{userId}
+     * @allow (create) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can create a profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @allow (get) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can read their profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @allow (update) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can update their profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @allow (delete) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can delete their profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @deny (create) User with UID " অন্যID " cannot create a profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @deny (get) User with UID " অন্যID " cannot read profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @deny (update) User with UID " অন্যID " cannot update profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @deny (delete) User with UID " অন্যID " cannot delete profile at /users/7C9umW6WQmPmGEXuJx7PGjMhJe53
+     * @principle Enforces document ownership for writes.
      */
     match /users/{userId} {
-      function isOwner(userId) {
-        return request.auth != null && request.auth.uid == userId;
-      }
-
-      function isExistingOwner(userId) {
-        return isOwner(userId) && resource != null;
-      }
-
-      allow get: if isOwner(userId);
-      allow list: if false; // Prevent listing all users
-
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id; //Immutable id
-      allow delete: if isExistingOwner(userId);
+      allow get: if isSignedIn() && isOwner(userId);
+      allow list: if false;
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isSignedIn() && isOwner(userId);
+      allow delete: if isSignedIn() && isOwner(userId);
     }
 
     /**
-     * @description Career paths are publicly readable, writes are not secured in this prototype.
-     * @path /careerPaths/{careerPathId}
-     * @allow (get, list) Any user can read career path information.
-     * @deny (create, update, delete) No one can currently write to career paths.
-     * @principle Public read, owner-only writes (currently writes are disallowed).
+     * @description Allows public read access to mentor profiles. Write access is restricted.
+     * @path /databases/{database}/documents/mentors/{mentorId}
+     * @allow (get) Any user can read a mentor profile.
+     * @allow (list) Any user can list mentor profiles.
+     * @deny (create) No one can create mentor profiles without authorization (TODO).
+     * @deny (update) No one can update mentor profiles without authorization (TODO).
+     * @deny (delete) No one can delete mentor profiles without authorization (TODO).
+     * @principle Provides public read access while restricting writes.
      */
-    match /careerPaths/{careerPathId} {
+    match /mentors/{mentorId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add authorization for career path creation/modification
+      allow create, update, delete: if false; // TODO: Add authorized user validation for mentor profile management.
     }
 
-    /**
-     * @description Courses are publicly readable, writes are not secured in this prototype.
-     * @path /courses/{courseId}
-     * @allow (get, list) Any user can read course information.
-     * @deny (create, update, delete) No one can currently write to courses.
-     * @principle Public read, owner-only writes (currently writes are disallowed).
+     /**
+     * @description Allows public read access to career paths. Write access is restricted.
+     * @path /databases/{database}/documents/career_paths/{careerPathId}
+     * @allow (get) Any user can read a career path.
+     * @allow (list) Any user can list career paths.
+     * @deny (create) No one can create career paths without authorization (TODO).
+     * @deny (update) No one can update career paths without authorization (TODO).
+     * @deny (delete) No one can delete career paths without authorization (TODO).
+     * @principle Provides public read access while restricting writes.
      */
-    match /courses/{courseId} {
+    match /career_paths/{careerPathId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add authorization for course creation/modification
+      allow create, update, delete: if false; // TODO: Add authorized user validation for career path management.
     }
 
     /**
-     * @description Mentorships are publicly readable, writes are not secured in this prototype.
-     * @path /mentorships/{mentorshipId}
-     * @allow (get, list) Any user can read mentorship information.
-     * @deny (create, update, delete) No one can currently write to mentorships.
-     * @principle Public read, owner-only writes (currently writes are disallowed).
+     * @description Allows users to read and write their own session data.
+     * @path /databases/{database}/documents/sessions/{sessionId}
+     * @allow (create) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can create a session at /sessions/{sessionId}
+     * @allow (get) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can read their session at /sessions/{sessionId}
+     * @allow (update) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can update their session at /sessions/{sessionId}
+     * @allow (delete) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can delete their session at /sessions/{sessionId}
+     * @deny (create) User with UID " অন্যID " cannot create a session at /sessions/{sessionId}
+     * @deny (get) User with UID " অন্যID " cannot read session at /sessions/{sessionId}
+     * @deny (update) User with UID " অন্যID " cannot update session at /sessions/{sessionId}
+     * @deny (delete) User with UID " অন্যID " cannot delete session at /sessions/{sessionId}
+     * @principle Enforces document ownership for writes.
+     */
+    match /sessions/{sessionId} {
+      allow get: if isSignedIn() && isSessionOwner(sessionId);
+      allow list: if false;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && isSessionOwner(sessionId) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isSignedIn() && isSessionOwner(sessionId);
+    }
+    
+    /**
+     * @description Allows users to read and write mentorship data.
+     * @path /databases/{database}/documents/mentorships/{mentorshipId}
+     * @allow (create) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can create a mentorship at /mentorships/{mentorshipId}
+     * @allow (get) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can read their mentorship at /mentorships/{mentorshipId}
+     * @allow (update) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can update their mentorship at /mentorships/{mentorshipId}
+     * @allow (delete) User with UID "7C9umW6WQmPmGEXuJx7PGjMhJe53" can delete their mentorship at /mentorships/{mentorshipId}
+     * @deny (create) User with UID " অন্যID " cannot create a mentorship at /mentorships/{mentorshipId}
+     * @deny (get) User with UID " অন্যID " cannot read mentorship at /mentorships/{mentorshipId}
+     * @deny (update) User with UID " অন্যID " cannot update mentorship at /mentorships/{mentorshipId}
+     * @deny (delete) User with UID " অন্যID " cannot delete mentorship at /mentorships/{mentorshipId}
+     * @principle Enforces document ownership for writes.
      */
     match /mentorships/{mentorshipId} {
-      allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add authorization for mentorship creation/modification
+      allow get: if isSignedIn() && isMentorshipParticipant(mentorshipId);
+      allow list: if false;
+      allow create: if isSignedIn() && (request.resource.data.menteeId == request.auth.uid || request.resource.data.mentorId == request.auth.uid);
+      allow update: if isSignedIn() && isMentorshipParticipant(mentorshipId) && (request.resource.data.menteeId == resource.data.menteeId) && (request.resource.data.mentorId == resource.data.mentorId);
+      allow delete: if isSignedIn() && isMentorshipParticipant(mentorshipId);
     }
+  }
+
+  // Helper functions
+  function isSignedIn() {
+    return request.auth != null;
+  }
+
+  function isOwner(userId) {
+    return request.auth.uid == userId;
+  }
+
+  function isExistingOwner(userId) {
+    return isSignedIn() && isOwner(userId) && resource != null;
+  }
+
+  function isSessionOwner(sessionId) {
+    return exists(/databases/$(database)/documents/sessions/$(sessionId)) && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid;
+  }
+  
+  function isExistingSessionOwner(sessionId) {
+    return isSignedIn() && isSessionOwner(sessionId) && resource != null;
+  }
+  
+    function isMentorshipParticipant(mentorshipId) {
+    return exists(/databases/$(database)/documents/mentorships/$(mentorshipId)) && (get(/databases/$(database)/documents/mentorships/$(mentorshipId)).data.menteeId == request.auth.uid || get(/databases/$(database)/documents/mentorships/$(mentorshipId)).data.mentorId == request.auth.uid);
+  }
+
+  function isExistingMentorshipParticipant(mentorshipId) {
+      return isSignedIn() && isMentorshipParticipant(mentorshipId) && resource != null;
   }
 }
