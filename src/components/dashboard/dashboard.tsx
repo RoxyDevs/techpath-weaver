@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState, useFormStatus } from "react-dom";
 import { getCareerPaths, type FormState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,7 +39,7 @@ function SubmitButton() {
 }
 
 export function Dashboard() {
-  const [state, formAction] = useFormState(getCareerPaths, initialState);
+  const [state, formAction] = useActionState(getCareerPaths, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
