@@ -47,8 +47,11 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('Error signing in with Google', error);
+    } catch (error: any) {
+      // Don't log the error if the user simply closed the popup.
+      if (error.code !== 'auth/popup-closed-by-user') {
+        console.error('Error signing in with Google', error);
+      }
     }
   };
 
