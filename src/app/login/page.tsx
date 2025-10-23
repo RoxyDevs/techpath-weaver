@@ -59,25 +59,28 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleSignIn = async (providerName: 'google' | 'github') => {
+    if (!auth) return;
     const provider = providerName === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
     try {
       await signInWithPopup(auth, provider);
     } catch (error: any) {
-      // Don't log the error if the user simply closed the popup.
       if (error.code !== 'auth/popup-closed-by-user') {
-        console.error(`Error signing in with ${providerName}`, error);
+        console.error(`Error signing in with ${providerName}:`, error);
       }
     }
   };
 
 
   useEffect(() => {
+    // Only redirect if loading is complete and there IS a user.
     if (!isUserLoading && user) {
       router.push('/');
     }
   }, [user, isUserLoading, router]);
 
-  if (isUserLoading || user) {
+  // Show a loader while checking the auth state.
+  // This prevents the login form from flashing if the user is already logged in.
+  if (isUserLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -85,6 +88,17 @@ export default function LoginPage() {
     );
   }
 
+  // If loading is done and there's a user, they will be redirected by the useEffect.
+  // You can show a loader here as well, or just null.
+  if (user) {
+    return (
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      );
+  }
+
+  // If loading is done and there's no user, show the login page.
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background/80 p-4">
         <div className="absolute top-8 left-8">

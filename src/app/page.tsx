@@ -14,11 +14,14 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    // Only redirect if loading is complete and there's definitely no user.
     if (!isUserLoading && !user) {
       router.push('/login');
     }
   }, [user, isUserLoading, router]);
 
+  // While loading, or if there's no user yet (and we haven't redirected), show a loader.
+  // This prevents the dashboard from flashing before the redirect happens.
   if (isUserLoading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -27,6 +30,7 @@ export default function Home() {
     );
   }
 
+  // If loading is complete and we have a user, render the main content.
   return (
     <SidebarProvider>
       <AppSidebar />
