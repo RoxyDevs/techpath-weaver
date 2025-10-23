@@ -89,7 +89,7 @@ export default function LoginPage() {
   }
 
   // If loading is done and there's a user, they will be redirected by the useEffect.
-  // You can show a loader here as well, or just null.
+  // You can show a loader here as well, or just null, while redirecting.
   if (user) {
     return (
         <div className="flex h-screen w-full items-center justify-center bg-background">

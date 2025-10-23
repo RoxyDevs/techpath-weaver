@@ -20,9 +20,9 @@ export default function Home() {
     }
   }, [user, isUserLoading, router]);
 
-  // While loading, or if there's no user yet (and we haven't redirected), show a loader.
-  // This prevents the dashboard from flashing before the redirect happens.
-  if (isUserLoading || !user) {
+  // While loading, show a loader.
+  // This prevents the dashboard from flashing before a potential redirect.
+  if (isUserLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -30,7 +30,17 @@ export default function Home() {
     );
   }
 
-  // If loading is complete and we have a user, render the main content.
+  // If loading is done and we have a user, render the main content.
+  // If there's no user, the useEffect will have already initiated the redirect.
+  // We can return null or a loader while the redirect is in progress.
+  if (!user) {
+    return (
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      );
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
