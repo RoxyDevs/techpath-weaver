@@ -53,21 +53,24 @@ function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
-type Provider = 'google' | 'github' | null;
+type Provider = 'google' | 'github';
 
 export default function LoginPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const [isSigningIn, setIsSigningIn] = useState<Provider>(null);
+  const [isSigningIn, setIsSigningIn] = useState<Provider | null>(null);
 
-  const handleSignIn = async (providerName: 'google' | 'github') => {
+  const handleSignIn = async (providerName: Provider) => {
     if (!auth || isSigningIn) return;
+    
     setIsSigningIn(providerName);
+
     const provider = providerName === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
+    
     try {
       await signInWithPopup(auth, provider);
-      // The redirect is handled by the useEffect hook
+      // The redirect is handled by the useEffect hook below
     } catch (error: any) {
       if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
         console.error(`Error signing in with ${providerName}:`, error);
@@ -79,15 +82,12 @@ export default function LoginPage() {
 
 
   useEffect(() => {
-    // Only redirect if loading is complete and there IS a user.
     if (!isUserLoading && user) {
       router.push('/');
     }
   }, [user, isUserLoading, router]);
 
-  // Show a loader while checking the auth state.
-  // This prevents the login form from flashing if the user is already logged in.
-  if (isUserLoading) {
+  if (isUserLoading || user) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -95,17 +95,6 @@ export default function LoginPage() {
     );
   }
 
-  // If loading is done and there's a user, they will be redirected by the useEffect.
-  // You can show a loader here as well, or just null, while redirecting.
-  if (user) {
-    return (
-        <div className="flex h-screen w-full items-center justify-center bg-background">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
-      );
-  }
-
-  // If loading is done and there's no user, show the login page.
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background/80 p-4">
         <div className="absolute top-8 left-8">
@@ -122,11 +111,19 @@ export default function LoginPage() {
           <p className="text-center text-muted-foreground">Sign in to begin your journey.</p>
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
             <Button onClick={() => handleSignIn('google')} className="w-full" size="lg" disabled={!!isSigningIn}>
-                {isSigningIn ==='google' ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <GoogleIcon className="mr-2" />}
+                {isSigningIn === 'google' ? (
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                    <GoogleIcon className="mr-2" />
+                )}
                 Google
             </Button>
             <Button onClick={() => handleSignIn('github')} className="w-full bg-[#24292e] hover:bg-[#24292e]/90 text-white" size="lg" disabled={!!isSigningIn}>
-                {isSigningIn === 'github' ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <GithubIcon className="mr-2" />}
+                {isSigningIn === 'github' ? (
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                    <GithubIcon className="mr-2" />
+                )}
                 GitHub
             </Button>
           </div>
