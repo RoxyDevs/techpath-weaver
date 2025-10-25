@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useAuth, useUser } from '@/firebase';
 import { GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -53,20 +53,27 @@ function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
     );
 }
 
+type Provider = 'google' | 'github' | null;
+
 export default function LoginPage() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const [isSigningIn, setIsSigningIn] = useState<Provider>(null);
 
   const handleSignIn = async (providerName: 'google' | 'github') => {
-    if (!auth) return;
+    if (!auth || isSigningIn) return;
+    setIsSigningIn(providerName);
     const provider = providerName === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
     try {
       await signInWithPopup(auth, provider);
+      // The redirect is handled by the useEffect hook
     } catch (error: any) {
-      if (error.code !== 'auth/popup-closed-by-user') {
+      if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
         console.error(`Error signing in with ${providerName}:`, error);
       }
+    } finally {
+        setIsSigningIn(null);
     }
   };
 
@@ -114,12 +121,12 @@ export default function LoginPage() {
         <CardContent className="flex flex-col items-center gap-6 pt-6">
           <p className="text-center text-muted-foreground">Sign in to begin your journey.</p>
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
-            <Button onClick={() => handleSignIn('google')} className="w-full" size="lg">
-                <GoogleIcon className="mr-2" />
+            <Button onClick={() => handleSignIn('google')} className="w-full" size="lg" disabled={!!isSigningIn}>
+                {isSigningIn ==='google' ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <GoogleIcon className="mr-2" />}
                 Google
             </Button>
-            <Button onClick={() => handleSignIn('github')} className="w-full bg-[#24292e] hover:bg-[#24292e]/90 text-white" size="lg">
-                <GithubIcon className="mr-2" />
+            <Button onClick={() => handleSignIn('github')} className="w-full bg-[#24292e] hover:bg-[#24292e]/90 text-white" size="lg" disabled={!!isSigningIn}>
+                {isSigningIn === 'github' ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <GithubIcon className="mr-2" />}
                 GitHub
             </Button>
           </div>
