@@ -204,7 +204,6 @@
     ]
   },
   "firestore": {
-    "rules": "firestore.rules",
     "/users/{userId}": {
       "schema": "UserProfile",
       "description": "Stores user profile data. The document ID is the user's Firebase Auth UID."
