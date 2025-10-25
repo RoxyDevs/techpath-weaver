@@ -205,27 +205,25 @@
   },
   "firestore": {
     "rules": "firestore.rules",
-    "structure": {
-      "users": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Stores user profile data. The document ID is the user's Firebase Auth UID."
+    },
+    "/mentors/{mentorId}": {
         "schema": "UserProfile",
-        "description": "Stores user profile data. The document ID is the user's Firebase Auth UID."
-      },
-      "mentors": {
-          "schema": "UserProfile",
-          "description": "Public profiles for mentors. Subset of UserProfile, contains specialty, availability etc."
-      },
-      "career_paths": {
-        "schema": "CareerPath",
-        "description": "Stores suggested career paths based on market analysis."
-      },
-      "sessions": {
-        "schema": "UserSession",
-        "description": "Collection to store user interaction history."
-      },
-      "mentorships": {
-        "schema": "Mentorship",
-        "description": "Stores mentorship connection information."
-      }
+        "description": "Public profiles for mentors. Subset of UserProfile, contains specialty, availability etc."
+    },
+    "/career_paths/{careerPathId}": {
+      "schema": "CareerPath",
+      "description": "Stores suggested career paths based on market analysis."
+    },
+    "/sessions/{sessionId}": {
+      "schema": "UserSession",
+      "description": "Collection to store user interaction history."
+    },
+    "/mentorships/{mentorshipId}": {
+      "schema": "Mentorship",
+      "description": "Stores mentorship connection information."
     }
   }
 }
