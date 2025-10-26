@@ -46,23 +46,23 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="prose prose-lg max-w-none text-gray-700">
-            <p>
+          <div className="max-w-none text-gray-700">
+            <p className="mb-4">
               ¡Hola! Soy Roxana Rolón, la desarrolladora detrás de **TechPath Weaver**. 
               Este proyecto nació de mi pasión por la tecnología y mi deseo de crear 
               herramientas que empoderen a las mujeres en su desarrollo profesional.
             </p>
 
-            <h2 className="text-2xl font-bold text-gray-900 mt-8">La Misión de TechPath Weaver</h2>
-            <p>
+            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-2">La Misión de TechPath Weaver</h2>
+            <p className="mb-4">
               **TechPath Weaver** es una aplicación web y un bot de Telegram, ambos impulsados 
               por Inteligencia Artificial y Firebase. La plataforma está diseñada para guiar a 
               las mujeres en el campo de la tecnología, recomendando trayectorias 
               profesionales, cursos y mentorías basadas en datos del mercado laboral actual.
             </p>
 
-            <h3 className="text-xl font-bold text-gray-900 mt-6">Funcionalidades Clave</h3>
-            <ul className="list-disc pl-6">
+            <h3 className="text-xl font-bold text-gray-900 mt-6 mb-2">Funcionalidades Clave</h3>
+            <ul className="list-disc pl-6 mb-4">
               <li>Recomendaciones de carrera personalizadas según tu perfil e intereses.</li>
               <li>Detección de brechas de habilidades y sugerencias de cursos para cerrarlas.</li>
               <li>Emparejamiento inteligente con mentoras afines.</li>
@@ -70,18 +70,18 @@ export default function AboutPage() {
               <li>Integración con un bot de Telegram para consultas rápidas.</li>
             </ul>
 
-            <h2 className="text-2xl font-bold text-gray-900 mt-8">El Objetivo</h2>
-            <p>
+            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-2">El Objetivo</h2>
+            <p className="mb-4">
               Mi objetivo con TechPath Weaver es crear una experiencia inclusiva, moderna 
               y automatizada que potencie el crecimiento profesional de las mujeres en el 
               sector tecnológico, conectando aprendizaje, mentoría y oportunidades reales.
             </p>
 
-            <h2 className="text-2xl font-bold text-gray-900 mt-8">Stack Tecnológico</h2>
-            <p>
+            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-2">Stack Tecnológico</h2>
+            <p className="mb-4">
               Para construir TechPath Weaver, utilicé un stack moderno que incluye:
             </p>
-            <ul className="list-disc pl-6">
+            <ul className="list-disc pl-6 mb-4">
               <li>**Frontend:** Next.js, TypeScript y Tailwind CSS</li>
               <li>**Backend:** Firebase (Authentication, Firestore, Hosting, Cloud Functions)</li>
               <li>**IA:** Gemini / Genkit (Google AI)</li>
