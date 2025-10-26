@@ -109,7 +109,7 @@ export default function LoginPage() {
         <div className="text-center">
             <div style={{position: 'relative', width: '100%', height: 0, paddingTop: '100.0000%',
             paddingBottom: 0, boxShadow: '0 2px 8px 0 rgba(63,69,81,0.16)', marginTop: '1.6em', marginBottom: '0.9em', overflow: 'hidden',
-            borderRadius: '8px', willChange: 'transform'}}>
+            borderRadius: '9999px', willChange: 'transform'}}>
             <iframe loading="lazy" style={{position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, border: 'none', padding: 0, margin: 0}}
                 src="https://www.canva.com/design/DAG25ykPjUM/rlWyVMEebE8yaPghn54-mw/view?embed" allowFullScreen="allowfullscreen" allow="fullscreen">
             </iframe>
@@ -188,6 +188,11 @@ export default function LoginPage() {
             >
               Recargar página
             </button>
+          </p>
+          <p className="text-xs text-gray-500 mt-2">
+            <a href="/about" className="text-purple-600 hover:text-purple-500 font-medium underline">
+              Sobre la creadora
+            </a>
           </p>
         </div>
       </div>
