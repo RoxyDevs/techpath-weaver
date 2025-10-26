@@ -107,9 +107,13 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-purple-100">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4">
-            <span className="text-2xl text-white font-bold">TW</span>
-          </div>
+            <div style={{position: 'relative', width: '100%', height: 0, paddingTop: '100.0000%',
+            paddingBottom: 0, boxShadow: '0 2px 8px 0 rgba(63,69,81,0.16)', marginTop: '1.6em', marginBottom: '0.9em', overflow: 'hidden',
+            borderRadius: '8px', willChange: 'transform'}}>
+            <iframe loading="lazy" style={{position: 'absolute', width: '100%', height: '100%', top: 0, left: 0, border: 'none', padding: 0, margin: 0}}
+                src="https://www.canva.com/design/DAG25ykPjUM/rlWyVMEebE8yaPghn54-mw/view?embed" allowFullScreen="allowfullscreen" allow="fullscreen">
+            </iframe>
+            </div>
           <h2 className="text-3xl font-bold text-gray-900">
             TechPath Weaver
           </h2>
