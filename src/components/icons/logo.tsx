@@ -1,33 +1,28 @@
 
-import type { SVGProps } from "react";
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
-export function Logo(props: SVGProps<SVGSVGElement>) {
+type LogoProps = {
+  className?: string;
+};
+
+export function Logo({ className }: LogoProps) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
-      width="100"
-      height="100"
-      aria-label="TechPath Weaver Logo"
-      {...props}
+    <div
+      className={cn(
+        'relative w-24 h-24 rounded-full shadow-2xl flex items-center justify-center',
+        'ring-4 ring-white ring-offset-4 ring-offset-background',
+        className
+      )}
     >
-      <defs>
-        <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: 'hsl(var(--primary))', stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: 'hsl(var(--accent))', stopOpacity: 1 }} />
-        </linearGradient>
-      </defs>
-      <circle cx="50" cy="50" r="48" fill="url(#logo-gradient)" stroke="hsl(var(--border))" strokeWidth="2" />
-      <text
-        x="50"
-        y="55"
-        textAnchor="middle"
-        fontFamily="Visage, sans-serif"
-        fontSize="30"
-        fill="hsl(var(--primary-foreground))"
-      >
-        TW
-      </text>
-    </svg>
+      <Image
+        src="/images/logo.png"
+        alt="TechPath Weaver Logo"
+        width={96}
+        height={96}
+        className="rounded-full"
+        priority // Cargar el logo rápidamente
+      />
+    </div>
   );
 }
