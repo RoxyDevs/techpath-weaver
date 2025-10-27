@@ -11,7 +11,7 @@ import {
 import { useAuth, useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Loader2, AlertCircle } from 'lucide-react';
-import Logo from '@/components/icons/logo'; // Importar el logo
+import { Logo } from '@/components/icons/logo'; // Corregir la importación
 
 export default function LoginPage() {
   const [loadingProvider, setLoadingProvider] = useState<'google' | 'github' | null>(null);
