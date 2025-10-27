@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useActionState } from "react";
+import { useEffect } from "react";
+import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { getCareerPaths, type FormState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Recommendations } from "./recommendations";
 import { Mentors } from "./mentors";
 import { Progress } from "./progress";
 import { TechTrivia } from "./tech-trivia";
+import { Guide } from "../guide";
 
 const initialState: FormState = {
   message: "",
@@ -56,7 +58,8 @@ export function Dashboard() {
     <div className="space-y-8">
       <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <Card className="shadow-lg border-primary/20 h-full">
+            <Card className="shadow-lg border-primary/20 h-full relative">
+              <Guide content="Describe tus intereses y habilidades aquí. Mientras más detallada seas, mejores serán las recomendaciones que nuestra IA podrá generar para ti." />
               <CardHeader>
                 <CardTitle className="font-headline text-3xl">Let's Weave Your Future</CardTitle>
                 <CardDescription className="font-body text-base">
@@ -76,12 +79,16 @@ export function Dashboard() {
               </CardContent>
             </Card>
           </div>
-          <TechTrivia />
+          <div className="relative">
+            <Guide content="¡Una dosis diaria de conocimiento! Cada día te mostraremos un dato curioso sobre la historia de la tecnología." />
+            <TechTrivia />
+          </div>
       </div>
       
       {state.paths.length > 0 ? (
         <div className="space-y-8">
-            <div>
+            <div className="relative">
+                <Guide content="Estos son los caminos profesionales que la IA ha generado para ti. Explora cada uno para ver cursos, mentoras y datos del mercado laboral." />
                 <h2 className="text-2xl font-headline mb-4">Your Recommended Career Paths</h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {state.paths.map((path, index) => (

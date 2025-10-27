@@ -24,12 +24,15 @@ import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAuth, useUser } from "@/firebase";
 import { VerifiedBadge } from "../icons/verified-badge";
+import { SettingsDialog } from "./settings-dialog";
+import { useState } from "react";
 
 export function AppSidebar() {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -107,9 +110,10 @@ export function AppSidebar() {
                 <p className="text-xs text-muted-foreground">{user.email}</p>
               </div>
             </div>
+            <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton href="#" tooltip="Settings">
+                <SidebarMenuButton onClick={() => setIsSettingsOpen(true)} tooltip="Settings">
                   <Settings />
                   Settings
                 </SidebarMenuButton>

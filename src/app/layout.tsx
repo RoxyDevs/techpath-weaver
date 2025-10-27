@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { FirebaseClientProvider } from '@/firebase';
+import { GuidesProvider } from '@/contexts/GuidesContext';
 
 export const metadata: Metadata = {
   title: 'TechPath Weaver',
@@ -48,8 +49,10 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
-          {children}
-          <Toaster />
+          <GuidesProvider>
+            {children}
+            <Toaster />
+          </GuidesProvider>
         </FirebaseClientProvider>
       </body>
     </html>
