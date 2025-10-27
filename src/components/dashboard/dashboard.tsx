@@ -73,7 +73,7 @@ export function Dashboard() {
                     name="interests"
                     placeholder="e.g., 'I love creating beautiful user interfaces, solving complex problems with code, and I'm passionate about data visualization and machine learning.'"
                     rows={4}
-                    className="font-body text-base"
+                    className="font-body text-base bg-background"
                   />
                   <SubmitButton />
                 </form>
@@ -108,7 +108,7 @@ export function Dashboard() {
         </div>
       ) : (
         <div className="text-center py-16 text-muted-foreground font-body">
-            <Wand2 className="mx-auto h-12 w-12 mb-4" />
+            <Wand2 className="mx-auto h-12 w-12" />
             <p className="text-lg">Your future career paths will appear here once you share your interests.</p>
         </div>
       )}

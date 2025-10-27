@@ -10,10 +10,10 @@ type CareerCardProps = {
 
 export function CareerCard({ path }: CareerCardProps) {
   return (
-    <Card className="flex flex-col h-full shadow-lg hover:shadow-2xl transition-shadow duration-300">
+    <Card className="flex flex-col h-full shadow-lg hover:shadow-2xl transition-shadow duration-300 border-secondary/20">
       <CardHeader>
         <div className="flex items-center gap-4">
-            <div className="bg-primary/10 p-3 rounded-lg">
+            <div className="bg-primary/10 p-3 rounded-full">
                 <ArrowRight className="h-6 w-6 text-primary" />
             </div>
             <CardTitle className="font-headline text-xl">{path}</CardTitle>
@@ -26,11 +26,11 @@ export function CareerCard({ path }: CareerCardProps) {
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
         <Button size="sm" variant="secondary" className="shadow-lg hover:shadow-xl">
-          <BookOpen />
+          <BookOpen className="mr-2 h-4 w-4" />
           Courses
         </Button>
         <Button size="sm" variant="secondary" className="shadow-lg hover:shadow-xl">
-          <Users />
+          <Users className="mr-2 h-4 w-4" />
           Mentors
         </Button>
       </CardFooter>
