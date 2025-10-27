@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -24,7 +25,7 @@ const initialState: FormState = {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full sm:w-auto">
+    <Button type="submit" disabled={pending} className="w-full sm:w-auto shadow-lg hover:shadow-xl">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -58,7 +59,7 @@ export function Dashboard() {
     <div className="space-y-8">
       <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <Card className="shadow-lg border-primary/20 h-full relative">
+            <Card className="shadow-2xl border-primary/20 h-full relative">
               <Guide content="Describe tus intereses y habilidades aquí. Mientras más detallada seas, mejores serán las recomendaciones que nuestra IA podrá generar para ti." />
               <CardHeader>
                 <CardTitle className="font-headline text-3xl">Let's Weave Your Future</CardTitle>

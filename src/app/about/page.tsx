@@ -1,106 +1,46 @@
-'use client';
 
-import Head from 'next/head';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function AboutPage() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Roxana Rolón",
-    "url": "https://www.linkedin.com/in/roxanarolon/",
-    "jobTitle": "Desarrolladora de Software",
-    "alumniOf": {
-      "@type": "OrganizationRole",
-      "organization": {
-        "@type": "Organization",
-        "name": "TechPath Weaver"
-      }
-    }
-  };
-
   return (
-    <>
-      <Head>
-        <title>Sobre la Creadora | TechPath Weaver</title>
-        <meta 
-          name="description" 
-          content="Conoce a Roxana Rolón, la creadora de TechPath Weaver, una aplicación web y bot de Telegram diseñados para guiar a mujeres en tecnología."
-        />
-        <meta property="og:title" content="Sobre la Creadora | TechPath Weaver" />
-        <meta property="og:description" content="Conoce a Roxana Rolón, la creadora de TechPath Weaver, una aplicación web y bot de Telegram diseñados para guiar a mujeres en tecnología." />
-        <meta property="og:url" content="https://techpath-weaver.vercel.app/about" />
-        <meta property="og:type" content="website" />
-        <script 
-          type="application/ld+json" 
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </Head>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-purple-100">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900">
-              Sobre la Creadora: Roxana Rolón
-            </h1>
-            <p className="mt-2 text-lg text-gray-600">
-              Desarrolladora de Software y creadora de TechPath Weaver
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <div className="p-8 sm:p-12">
+            <div className="text-center mb-10">
+              <Avatar className="w-32 h-32 mx-auto mb-6 ring-4 ring-purple-200 ring-offset-4 shadow-lg">
+                <AvatarImage src="/images/roxana-rolon.jpg" alt="Roxana Rolón" />
+                <AvatarFallback>RR</AvatarFallback>
+              </Avatar>
+              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 font-headline">
+                Roxana Rolón
+              </h1>
+              <p className="mt-2 text-xl text-purple-600 font-semibold font-body">
+                Fundadora de TechPath Weaver
+              </p>
+            </div>
 
-          <div className="max-w-none text-gray-700">
-            <p className="mb-4">
-              ¡Hola! Soy Roxana Rolón, la desarrolladora detrás de **TechPath Weaver**. 
-              Este proyecto nació de mi pasión por la tecnología y mi deseo de crear 
-              herramientas que empoderen a las mujeres en su desarrollo profesional.
-            </p>
-
-            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-2">La Misión de TechPath Weaver</h2>
-            <p className="mb-4">
-              **TechPath Weaver** es una aplicación web y un bot de Telegram, ambos impulsados 
-              por Inteligencia Artificial y Firebase. La plataforma está diseñada para guiar a 
-              las mujeres en el campo de la tecnología, recomendando trayectorias 
-              profesionales, cursos y mentorías basadas en datos del mercado laboral actual.
-            </p>
-
-            <h3 className="text-xl font-bold text-gray-900 mt-6 mb-2">Funcionalidades Clave</h3>
-            <ul className="list-disc pl-6 mb-4">
-              <li>Recomendaciones de carrera personalizadas según tu perfil e intereses.</li>
-              <li>Detección de brechas de habilidades y sugerencias de cursos para cerrarlas.</li>
-              <li>Emparejamiento inteligente con mentoras afines.</li>
-              <li>Seguimiento de tu progreso y logros.</li>
-              <li>Integración con un bot de Telegram para consultas rápidas.</li>
-            </ul>
-
-            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-2">El Objetivo</h2>
-            <p className="mb-4">
-              Mi objetivo con TechPath Weaver es crear una experiencia inclusiva, moderna 
-              y automatizada que potencie el crecimiento profesional de las mujeres en el 
-              sector tecnológico, conectando aprendizaje, mentoría y oportunidades reales.
-            </p>
-
-            <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-2">Stack Tecnológico</h2>
-            <p className="mb-4">
-              Para construir TechPath Weaver, utilicé un stack moderno que incluye:
-            </p>
-            <ul className="list-disc pl-6 mb-4">
-              <li>**Frontend:** Next.js, TypeScript y Tailwind CSS</li>
-              <li>**Backend:** Firebase (Authentication, Firestore, Hosting, Cloud Functions)</li>
-              <li>**IA:** Gemini / Genkit (Google AI)</li>
-              <li>**Integraciones:** Telegram Bot API</li>
-            </ul>
-
-            <div className="text-center mt-12">
-              <a 
-                href="https://www.linkedin.com/in/roxanarolon/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-purple-600 hover:text-purple-500 font-medium underline"
-              >
-                Conecta conmigo en LinkedIn
-              </a>
+            <div className="space-y-8 text-lg text-gray-700 font-body">
+              <p className="leading-relaxed">
+                ¡Hola! Soy Roxana, y estoy increíblemente feliz de que estés aquí. Como desarrolladora de software y apasionada por la tecnología, creé TechPath Weaver con una misión clara: cerrar la brecha de género en nuestra industria y empoderar a más mujeres para que alcancen su máximo potencial.
+              </p>
+              <blockquote className="border-l-4 border-purple-200 pl-6 py-2 italic text-gray-600">
+                "Mi visión es un mundo donde cada mujer en tecnología tenga acceso a las herramientas, la guía y la comunidad que necesita para construir una carrera exitosa y satisfactoria."
+              </blockquote>
+              <p className="leading-relaxed">
+                TechPath Weaver nació de mi propia experiencia navegando el mundo de la tecnología. A menudo me encontraba deseando tener una guía, alguien que me mostrara las posibilidades y me ayudara a trazar un camino. Por eso, decidí construir la solución que me hubiera encantado tener.
+              </p>
+              <p className="leading-relaxed">
+                Esta plataforma es más que solo una herramienta; es una comunidad. Es un espacio para aprender, crecer y conectar con otras mujeres que comparten tus mismas aspiraciones. Con la ayuda de la inteligencia artificial, podemos ofrecerte una guía personalizada y relevante, ayudándote a descubrir el camino perfecto para ti.
+              </p>
+              <p className="leading-relaxed font-semibold text-gray-800">
+                Gracias por ser parte de este viaje. Juntas, estamos tejiendo el futuro de la tecnología.
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

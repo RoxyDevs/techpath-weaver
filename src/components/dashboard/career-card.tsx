@@ -1,3 +1,4 @@
+
 import { ArrowRight, BookOpen, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ type CareerCardProps = {
 
 export function CareerCard({ path }: CareerCardProps) {
   return (
-    <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300">
+    <Card className="flex flex-col h-full shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <CardHeader>
         <div className="flex items-center gap-4">
             <div className="bg-primary/10 p-3 rounded-lg">
@@ -24,11 +25,11 @@ export function CareerCard({ path }: CareerCardProps) {
         </CardDescription>
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
-        <Button size="sm" variant="secondary">
+        <Button size="sm" variant="secondary" className="shadow-lg hover:shadow-xl">
           <BookOpen />
           Courses
         </Button>
-        <Button size="sm" variant="secondary">
+        <Button size="sm" variant="secondary" className="shadow-lg hover:shadow-xl">
           <Users />
           Mentors
         </Button>
