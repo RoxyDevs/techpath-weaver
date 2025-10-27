@@ -47,14 +47,16 @@ export default function LoginPage() {
       await signInWithPopup(auth, authProvider, browserPopupRedirectResolver);
 
     } catch (error: any) {
+      // Ignorar los errores de cancelación por parte del usuario, que son normales.
+      if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+        setLoadingProvider(null);
+        return;
+      }
+      
       console.error('Error de autenticación:', error.code, error.message);
       
       let errorMessage = 'Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.';
       switch (error.code) {
-        case 'auth/cancelled-popup-request':
-        case 'auth/popup-closed-by-user':
-          errorMessage = ''; 
-          break;
         case 'auth/popup-blocked':
           errorMessage = 'El popup de inicio de sesión fue bloqueado por tu navegador. Por favor, habilita las ventanas emergentes para este sitio.';
           break;
@@ -69,9 +71,7 @@ export default function LoginPage() {
           break;
       }
 
-      if (errorMessage) {
-        setError(errorMessage);
-      }
+      setError(errorMessage);
     } finally {
         setLoadingProvider(null);
     }
@@ -135,3 +135,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+    
