@@ -16,7 +16,7 @@ export function Logo({ className }: LogoProps) {
       )}
     >
       <Image
-        src="/images/LogoThechPathWeaver.png"
+        src="/images/LogoTechPathWeaver.png"
         alt="TechPath Weaver Logo"
         fill
         sizes="96px"
