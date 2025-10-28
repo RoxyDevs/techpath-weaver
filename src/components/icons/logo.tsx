@@ -18,8 +18,9 @@ export function Logo({ className }: LogoProps) {
       <Image
         src="/images/LogoThechPathWeaver.png"
         alt="TechPath Weaver Logo"
-        width={96}
-        height={96}
+        fill
+        sizes="96px"
+        style={{ objectFit: 'cover' }}
         className="rounded-full"
         priority
       />
