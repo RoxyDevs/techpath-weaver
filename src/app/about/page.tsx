@@ -10,7 +10,7 @@ export default function AboutPage() {
           <div className="p-8 sm:p-12">
             <div className="text-center mb-10">
               <Avatar className="w-32 h-32 mx-auto mb-6 ring-4 ring-purple-200 ring-offset-4 shadow-lg">
-                <AvatarImage src="/images/roxana-rolon.jpg" alt="Roxana Rolón" />
+                <AvatarImage src="/images/ROXDEV.png" alt="Roxana Rolón" />
                 <AvatarFallback>RR</AvatarFallback>
               </Avatar>
               <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 font-headline">
