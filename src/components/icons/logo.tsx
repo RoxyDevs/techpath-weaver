@@ -16,12 +16,12 @@ export function Logo({ className }: LogoProps) {
       )}
     >
       <Image
-        src="/images/logo.png"
+        src="/images/LogoThechPathWeaver.png"
         alt="TechPath Weaver Logo"
         width={96}
         height={96}
         className="rounded-full"
-        priority // Cargar el logo rápidamente
+        priority
       />
     </div>
   );
