@@ -1,13 +1,26 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
-import { FirebaseClientProvider } from '@/firebase';
-import { GuidesProvider } from '@/contexts/GuidesContext';
+
+import type { Metadata } from "next";
+import { Belleza, Alegreya } from "next/font/google";
+import "./globals.css";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster";
+import { FirebaseProvider } from "@/firebase/provider";
+
+const belleza = Belleza({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-belleza",
+});
+
+const alegreya = Alegreya({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-alegreya",
+});
 
 export const metadata: Metadata = {
-  title: 'TechPath Weaver',
-  description:
-    'Personalized career paths, courses, and mentorship for women in tech.',
+  title: "TechPath Weaver",
+  description: "Weaving your future in technology, one thread at a time.",
 };
 
 export default function RootLayout({
@@ -16,44 +29,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              })();
-            `,
-          }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Visage:wght@400&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-body antialiased">
-        <FirebaseClientProvider>
-          <GuidesProvider>
-            {children}
-            <Toaster />
-          </GuidesProvider>
-        </FirebaseClientProvider>
+    <html lang="en">
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          belleza.variable,
+          alegreya.variable
+        )}
+      >
+        <FirebaseProvider>
+          {children}
+          <Toaster />
+        </FirebaseProvider>
       </body>
     </html>
   );
