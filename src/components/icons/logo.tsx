@@ -1,31 +1,28 @@
-import type { SVGProps } from "react";
 
-export function Logo(props: SVGProps<SVGSVGElement>) {
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+
+type LogoProps = {
+  className?: string;
+};
+
+export function Logo({ className }: LogoProps) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 20"
-      width="100"
-      height="20"
-      aria-label="TechPath Weaver Logo"
-      {...props}
+    <div
+      className={cn(
+        'relative w-24 h-24 rounded-full shadow-2xl flex items-center justify-center',
+        'ring-4 ring-white ring-offset-4 ring-offset-background',
+        className
+      )}
     >
-      <style>
-        {`
-          .logo-text {
-            font-family: 'Visage', sans-serif;
-            font-size: 18px;
-            fill: hsl(var(--foreground));
-          }
-          .logo-highlight {
-            fill: hsl(var(--accent));
-          }
-        `}
-      </style>
-      <text x="0" y="15" className="logo-text">
-        Tech<tspan className="logo-highlight font-headline">P</tspan>ath
-        Weaver
-      </text>
-    </svg>
+      <Image
+        src="/images/LogoThechPathWeaver.png"
+        alt="TechPath Weaver Logo"
+        width={96}
+        height={96}
+        className="rounded-full"
+        priority // Cargar el logo rápidamente
+      />
+    </div>
   );
 }
