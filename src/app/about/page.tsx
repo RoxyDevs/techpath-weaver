@@ -26,7 +26,7 @@ export default function AboutPage() {
                 ¡Hola! Soy Roxana, y estoy increíblemente feliz de que estés aquí. Como desarrolladora de software y apasionada por la tecnología, creé TechPath Weaver con una misión clara: cerrar la brecha de género en nuestra industria y empoderar a más mujeres para que alcancen su máximo potencial.
               </p>
               <blockquote className="border-l-4 border-purple-200 pl-6 py-2 italic text-gray-600">
-                "Mi visión es un mundo donde cada mujer en tecnología tenga acceso a las herramientas, la guía y la comunidad que necesita para construir una carrera exitosa y satisfactoria."
+                &quot;Mi visión es un mundo donde cada mujer en tecnología tenga acceso a las herramientas, la guía y la comunidad que necesita para construir una carrera exitosa y satisfactoria.&quot;
               </blockquote>
               <p className="leading-relaxed">
                 TechPath Weaver nació de mi propia experiencia navegando el mundo de la tecnología. A menudo me encontraba deseando tener una guía, alguien que me mostrara las posibilidades y me ayudara a trazar un camino. Por eso, decidí construir la solución que me hubiera encantado tener.

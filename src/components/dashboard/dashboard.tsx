@@ -62,7 +62,7 @@ export function Dashboard() {
             <Card className="shadow-2xl border-primary/20 h-full relative">
               <Guide content="Describe tus intereses y habilidades aquí. Mientras más detallada seas, mejores serán las recomendaciones que nuestra IA podrá generar para ti." />
               <CardHeader>
-                <CardTitle className="font-headline text-3xl">Let's Weave Your Future</CardTitle>
+                <CardTitle className="font-headline text-3xl">Let&apos;s Weave Your Future</CardTitle>
                 <CardDescription className="font-body text-base">
                   Tell us about your passions, skills, and what you love to do. Our AI will craft personalized career paths just for you.
                 </CardDescription>
@@ -108,7 +108,7 @@ export function Dashboard() {
         </div>
       ) : (
         <div className="text-center py-16 text-muted-foreground font-body">
-            <Wand2 className="mx-auto h-12 w-12" />
+            <Wand2 className="mx-auto h-12 w-12 mb-4" />
             <p className="text-lg">Your future career paths will appear here once you share your interests.</p>
         </div>
       )}

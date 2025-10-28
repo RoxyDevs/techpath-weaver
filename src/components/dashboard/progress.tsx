@@ -1,32 +1,36 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress as ProgressBar } from "@/components/ui/progress";
 
-const skills = [
-    { name: "React", progress: 75, category: "Frontend" },
-    { name: "Python", progress: 90, category: "Backend" },
-    { name: "SQL", progress: 60, category: "Database" },
-    { name: "UI/UX Design", progress: 45, category: "Design" },
-]
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { BookOpenCheck } from "lucide-react";
 
 export function Progress() {
+  const completedCourses = 3;
+  const totalCourses = 10;
+  const progressPercentage = (completedCourses / totalCourses) * 100;
+
   return (
-    <Card>
-        <CardHeader>
-            <CardTitle className="font-headline text-2xl">Your Skill Progress</CardTitle>
-            <CardDescription className="font-body">Track your journey and see how far you've come.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-            {skills.map(skill => (
-                <div key={skill.name}>
-                    <div className="flex justify-between items-baseline mb-1">
-                        <span className="font-semibold font-body">{skill.name}</span>
-                        <Badge variant="outline">{skill.category}</Badge>
-                    </div>
-                    <ProgressBar value={skill.progress} aria-label={`${skill.name} progress`} />
-                </div>
-            ))}
-        </CardContent>
+    <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          <BookOpenCheck className="h-8 w-8 text-primary" />
+          <div>
+            <CardTitle className="font-headline text-2xl">Your Learning Progress</CardTitle>
+            <CardDescription>You&apos;re on your way to mastery!</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center font-body">
+            <span>Completed Courses</span>
+            <span>{completedCourses} / {totalCourses}</span>
+          </div>
+          <Progress value={progressPercentage} />
+          <p className="text-sm text-muted-foreground text-center pt-2">
+            Keep up the great work! Every step forward is a victory.
+          </p>
+        </div>
+      </CardContent>
     </Card>
-  )
+  );
 }

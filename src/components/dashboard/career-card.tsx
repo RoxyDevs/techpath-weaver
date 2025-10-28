@@ -21,7 +21,7 @@ export function CareerCard({ path }: CareerCardProps) {
       </CardHeader>
       <CardContent className="flex-grow">
         <CardDescription className="font-body">
-          Explore this path to see where it can take you. We'll provide course recommendations, market insights, and connect you with mentors.
+          Explore this path to see where it can take you. We&apos;ll provide course recommendations, market insights, and connect you with mentors.
         </CardDescription>
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
